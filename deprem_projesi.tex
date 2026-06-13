@@ -1,0 +1,454 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[turkish,english]{babel}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{geometry}
+
+\geometry{left=3cm,right=2.5cm,top=3cm,bottom=3cm}
+\onehalfspacing
+
+\begin{document}
+
+%-------------------- KAPAK --------------------
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{center}
+        \textbf{T.C.}\\[0.3cm]
+        \textbf{İSTANBUL AREL ÜNİVERSİTESİ}\\[0.2cm]
+        \textbf{MÜHENDİSLİK FAKÜLTESİ}\\[0.2cm]
+        \textbf{BİLGİSAYAR MÜHENDİSLİĞİ BÖLÜMÜ}\\[0.8cm]
+
+        \includegraphics[width=2.4cm,trim=2cm 2cm 2cm 2cm,clip]{logo.png}\\[0.8cm]
+
+        \textbf{\Large Türkiye Deprem Verileri Kullanılarak Riskli Bölge\\
+        ve Olay Deseni Analizi için Karar Destek Sistemi}\\[1.5cm]
+
+        \textbf{Arman Yalçın}\\
+        \textbf{220309012}\\[1.2cm]
+
+        \textbf{Danışman}\\
+        \textbf{Dr. Sibel BİRTANE AKAR}\\[1.5cm]
+
+        \textbf{ARA RAPOR}\\[1.5cm]
+
+        İstanbul, Haziran 2026
+    \end{center}
+\end{titlepage}
+
+%-------------------- ÖNSÖZ --------------------
+\chapter*{ÖNSÖZ}
+\addcontentsline{toc}{chapter}{ÖNSÖZ}
+
+Bu ara rapor, ``Türkiye Deprem Verileri Kullanılarak Riskli Bölge ve Olay Deseni
+Analizi için Karar Destek Sistemi'' başlıklı bitirme projesinin mevcut durumunu,
+şimdiye kadar tamamlanan çalışmaları ve izlenecek sonraki adımları sunmak amacıyla
+hazırlanmıştır. Çalışmanın bu aşamasında proje konusu netleştirilmiş, veri kaynakları
+incelenmiş, veritabanı tasarımı gerçekleştirilmiş ve veri işleme sürecinin ilk çalışan
+bileşenleri oluşturulmuştur.
+
+Bu süreçte deprem verilerinin yalnızca ham olay listeleri şeklinde sunulmasının ötesine
+geçerek, bölgesel yoğunluk, büyüklük dağılımı, derinlik özellikleri ve zamansal değişimlerin
+birlikte değerlendirilebildiği bir karar destek yapısı geliştirmenin hem teknik hem de
+akademik açıdan anlamlı olduğu görülmüştür. Hazırlanan bu ara rapor, projenin mevcut
+ilerleme düzeyini ve bundan sonraki geliştirme adımlarını sistematik biçimde ortaya koymaktadır.
+
+\vspace{1cm}
+\begin{flushright}
+Arman Yalçın\\
+Haziran 2026
+\end{flushright}
+
+\clearpage
+
+%-------------------- TÜRKÇE ÖZET --------------------
+\chapter*{Özet}
+\addcontentsline{toc}{chapter}{Özet}
+
+Bu ara raporda, Türkiye'deki deprem kayıtlarını kullanarak riskli bölge ve olay deseni
+analizi yapmayı amaçlayan bir karar destek sisteminin geliştirme sürecinde şimdiye kadar
+gerçekleştirilen çalışmalar sunulmaktadır. Projenin temel amacı, AFAD ve ilerleyen aşamada
+Kandilli Rasathanesi tarafından yayımlanan açık deprem verilerini kullanarak konum,
+büyüklük, derinlik ve zaman boyutlarında anlamlı analizler üreten bir sistem geliştirmektir.
+Proje, deprem tahmini yapmaktan ziyade geçmiş ve güncel kayıtlar üzerinden analitik
+çıkarımlar sunmayı hedeflemektedir.
+
+Ara rapor kapsamında PostgreSQL tabanlı veritabanı yapısı oluşturulmuş, deprem kayıtlarının
+saklanacağı temel tablolar tasarlanmış ve AFAD verilerinin alınmasına yönelik Python tabanlı
+bir veri toplama süreci geliştirilmiştir. Elde edilen veriler üzerinde tarih-saat dönüştürme,
+sayısal alan temizleme ve yer bilgisinden il/ilçe ayrıştırma işlemleri gerçekleştirilmiş,
+ardından veriler veritabanına aktarılmıştır. Veritabanı üzerinde şehir bazında deprem sayısı,
+ortalama büyüklük, maksimum büyüklük ve örnek risk puanı hesaplamaları yapılmıştır.
+Ayrıca elde edilen sonuçlar grafiksel olarak görselleştirilmiştir.
+
+Elde edilen mevcut bulgular, projenin teknik olarak uygulanabilir olduğunu ve Türkiye'ye ait
+resmi deprem verilerinin tek sistem altında analiz edilmesinin yararlı sonuçlar üretebileceğini
+göstermektedir. Sonraki aşamalarda Kandilli verilerinin sisteme dahil edilmesi, risk puanlama
+yaklaşımının geliştirilmesi, zaman serisi ve kümelenme analizlerinin eklenmesi ve web tabanlı
+görselleştirme katmanının oluşturulması planlanmaktadır.
+
+\clearpage
+
+%-------------------- İNGİLİZCE ÖZET --------------------
+\chapter*{İngilizce Özet}
+\addcontentsline{toc}{chapter}{İngilizce Özet}
+
+This interim report presents the progress achieved so far in the development of a decision
+support system designed to analyze risky regions and earthquake event patterns using earthquake
+records in Türkiye. The main objective of the project is to develop a system that produces
+meaningful analyses based on location, magnitude, depth, and temporal dimensions by using
+open earthquake data published by AFAD and, in later stages, Kandilli Observatory. Rather than
+attempting to predict earthquakes, the project focuses on generating analytical insights from
+historical and recent earthquake records.
+
+Within the scope of this interim report, a PostgreSQL-based database structure has been created,
+the core tables for storing earthquake records have been designed, and a Python-based data
+collection process has been developed for retrieving AFAD data. The collected data have been
+processed through date-time conversion, numerical field cleaning, and province/district extraction
+from location information, and then transferred into the database. Initial database analyses have
+been carried out, including city-based earthquake counts, average magnitude, maximum magnitude,
+and a sample risk score calculation. In addition, the obtained results have been visualized
+graphically.
+
+The findings obtained so far indicate that the project is technically feasible and that analyzing
+official earthquake data from Türkiye within a single system can provide useful outcomes.
+In the next stages, Kandilli data will be integrated into the system, the risk scoring approach
+will be improved, time series and clustering analyses will be added, and a web-based visualization
+layer will be developed.
+
+\clearpage
+
+%-------------------- İÇİNDEKİLER --------------------
+\tableofcontents
+\clearpage
+
+\listoffigures
+\addcontentsline{toc}{chapter}{Şekil Listesi}
+\clearpage
+
+\listoftables
+\addcontentsline{toc}{chapter}{Tablo Listesi}
+\clearpage
+
+%-------------------- BÖLÜMLER --------------------
+\chapter{Giriş}
+
+Türkiye, aktif fay hatları üzerinde yer alması nedeniyle yüksek deprem tehlikesi taşıyan
+bir ülkedir. AFAD tarafından yayımlanan Türkiye Deprem Tehlike Haritası ve güncel deprem
+bilgilendirme servisleri, ülke genelindeki sismik hareketliliğin sürekli izlendiğini
+göstermektedir \cite{afad_harita, afad_son}. Benzer şekilde Kandilli Rasathanesi de son
+depremler ve yıllık deprem harita-grafik çalışmaları ile kamuya açık veri sağlamaktadır
+\cite{kandilli_son, kandilli_yillik}. Ancak bu veriler çoğunlukla olay listeleri veya ham
+kayıtlar biçiminde sunulduğundan, kullanıcıların belirli bir bölge için geçmişten bugüne
+deprem davranışını doğrudan yorumlaması zorlaşmaktadır.
+
+Bu projenin çıkış noktası, deprem verilerini yalnızca görüntüleyen değil; bu veriler üzerinde
+yoğunluk, büyüklük dağılımı, derinlik özellikleri ve zamansal değişim analizi yaparak
+kullanıcıya karar desteği sunan bir yapı geliştirmektir. Böylece kullanıcılar sadece
+``hangi deprem ne zaman oldu?'' sorusuna değil, aynı zamanda ``hangi bölgelerde hareketlilik
+yoğunlaşıyor?'', ``hangi illerde daha yüksek büyüklüklü olaylar dikkat çekiyor?'' ve
+``hangi alanlar göreli olarak daha yüksek bir risk profiline sahip?'' gibi sorulara da
+yanıt bulabilecektir.
+
+Bu çalışma kapsamında Türkiye'ye ait resmi deprem verileri kullanılarak bir karar destek
+sistemi geliştirilmektedir. Sistemde deprem kayıtlarının toplanması, temizlenmesi,
+veritabanında saklanması ve analiz edilmesi amaçlanmaktadır. Bu doğrultuda PostgreSQL
+tabanlı bir veritabanı yapısı kurulmuş, AFAD verilerinin alınmasına yönelik Python tabanlı
+veri işleme süreci oluşturulmuş ve ilk analiz çıktıları elde edilmiştir. Şehir bazında
+deprem sayıları, ortalama büyüklükler ve örnek risk skorları hesaplanarak projenin temel
+analiz altyapısı oluşturulmuştur.
+
+Ara raporun amacı, projenin mevcut aşamaya kadar gerçekleştirilen çalışmalarını sistematik
+biçimde sunmaktır. Bu kapsamda literatür taraması, kullanılan yöntem ve araçlar, veri yapısı,
+uygulama sürecinde tamamlanan adımlar ve elde edilen ilk bulgular ele alınmaktadır. Uygulamanın
+nihai hâli henüz tamamlanmamış olmakla birlikte, mevcut aşamada veri toplama, veri temizleme,
+veritabanına aktarma ve ilk analiz işlemleri başarıyla gerçekleştirilmiştir.
+
+\chapter{Literatür Taraması}
+
+Deprem odaklı karar destek sistemleri literatürde farklı amaçlarla ele alınmaktadır.
+Bazı çalışmalar afet sonrası müdahale ve kaynak planlamasına odaklanırken, bazıları
+risk değerlendirme, mekânsal analiz ve çok ölçütlü karar verme süreçlerini ön plana
+çıkarmaktadır. Bu durum, deprem verilerinin yalnızca saklanması veya listelenmesiyle
+yetinilmeyip, karar süreçlerinde anlamlı bir girdi olarak kullanılabildiğini
+göstermektedir.
+
+Deprem risk değerlendirmesinde coğrafi bilgi sistemleri ve çok ölçütlü analizlerin
+birlikte kullanıldığı çalışmalar bulunmaktadır. Bu tür çalışmalarda belirli bölgelerin
+deprem açısından göreli durumunun değerlendirilebilmesi için farklı ölçütlerin bir
+arada ele alınması önerilmektedir. Özellikle bölgesel yoğunluk, büyüklük dağılımı,
+derinlik özellikleri ve zamansal değişim gibi göstergelerin birlikte incelenmesi,
+karar vericilere daha yorumlanabilir sonuçlar sunmaktadır.
+
+Son yıllarda deprem verilerinin büyük ölçekli veri analizi ve makine öğrenmesi ile
+birlikte değerlendirildiği çalışmalar da artmıştır. Bu çalışmalar, deprem verilerinin
+sadece tekil olay bazında değil, desen çıkarımı, sınıflandırma ve bölgesel eğilimlerin
+yorumlanması açısından da önemli bir potansiyele sahip olduğunu ortaya koymaktadır.
+Özellikle büyük deprem serilerinden sonra oluşan olay kümelenmeleri, bölgesel değişimler
+ve yoğunluk farkları, veri temelli yöntemlerle daha açık biçimde analiz edilebilmektedir.
+
+Literatürdeki çalışmalar incelendiğinde, deprem alanında geliştirilen sistemlerin
+çoğunlukla çok ölçütlü değerlendirme, coğrafi bilgi sistemleri, mekânsal karar destek
+yaklaşımı veya veri analitiği temelli çözümler sunduğu görülmektedir. Bu proje de
+benzer biçimde karar desteği üretmeyi hedeflemektedir; ancak odağını Türkiye'de kamuya
+açık resmi deprem kayıtlarının analizine ve kullanıcıya anlaşılır görsel çıktılar
+sunulmasına yerleştirmektedir.
+
+Bu proje kapsamında doğrudan yapı hasarı tahmini veya afet sonrası lojistik optimizasyonu
+yerine; il, ilçe ve bölge bazında deprem yoğunluğu, büyüklük profili, derinlik özellikleri
+ve zamansal aktivite değişimleri üzerinden yorumlanabilir bir risk görünümü üretmek
+amaçlanmaktadır. Bu yönüyle çalışma, literatürdeki karar destek yaklaşımını Türkiye'ye
+özgü açık deprem verileri üzerinde uygulanabilir bir yazılım sistemine dönüştürmeyi
+hedeflemektedir.
+
+\chapter{Yöntem ve Uygulama}
+
+Bu bölümde proje kapsamında kullanılan yöntemsel yaklaşım, tercih edilen araçlar,
+oluşturulan veri akışı, belirlenen veri alanları ve uygulanan ilk risk analizi mantığı
+sunulmaktadır. Ara rapor aşamasında sistemin tüm bileşenleri tamamlanmamış olmakla
+birlikte, veri toplama, veri temizleme, veritabanında saklama ve ilk analiz çıktılarının
+üretilmesine yönelik temel yapı oluşturulmuştur.
+
+\section{Kullanılan Yöntem ve Araçlar}
+
+Projede veri işleme ve analiz süreçleri için Python programlama dili kullanılmıştır.
+Python'un tercih edilme nedeni; veri toplama, dönüştürme, analiz ve görselleştirme
+işlemlerinin aynı ekosistem içerisinde yürütülebilmesidir. Veri temizleme ve tablo
+bazlı işlemler için \texttt{pandas}, veritabanı bağlantısı için \texttt{psycopg2},
+grafiksel çıktıların üretilmesi için ise \texttt{matplotlib} kullanılmıştır.
+
+Verilerin kalıcı olarak tutulması için PostgreSQL tabanlı bir ilişkisel veritabanı
+tercih edilmiştir. Bu tercihin nedeni, deprem olaylarının tarih, konum, derinlik ve
+büyüklük gibi yapısal alanlarla düzenli biçimde saklanabilmesi ve analiz sorgularının
+verimli şekilde gerçekleştirilebilmesidir. Veritabanı işlemleri pgAdmin arayüzü ile
+yönetilmiştir.
+
+Mevcut aşamada veri kaynağı olarak AFAD tarafından yayımlanan güncel deprem kayıtları
+kullanılmıştır. İlerleyen aşamalarda Kandilli Rasathanesi verilerinin de sisteme dahil
+edilmesi planlanmaktadır.
+
+\section{Sistem Akışı}
+
+Projede oluşturulan sistem akışı temel olarak dört aşamadan oluşmaktadır:
+
+\begin{enumerate}
+    \item AFAD kaynağından deprem verilerinin alınması,
+    \item alınan verilerin temizlenmesi ve ortak veri şemasına dönüştürülmesi,
+    \item temizlenen verilerin PostgreSQL veritabanına aktarılması,
+    \item veritabanı üzerinde analiz ve risk puanlama işlemlerinin gerçekleştirilmesi.
+\end{enumerate}
+
+İlk aşamada AFAD internet sitesindeki son depremler tablosu Python kullanılarak
+okunmuştur. Ardından tarih-saat, enlem, boylam, derinlik ve büyüklük gibi alanlar
+uygun veri tiplerine dönüştürülmüştür. Yer bilgisi alanı üzerinde il ve ilçe bilgisi
+ayrıştırılmış, eksik veya hatalı kayıtlar temizlenmiştir. Bu işlem sonucunda elde
+edilen temiz veri CSV biçiminde kaydedilmiş ve daha sonra PostgreSQL veritabanına
+aktarılmıştır.
+
+Veritabanına aktarılan kayıtlar üzerinde şehir bazında deprem sayısı, ortalama
+büyüklük, maksimum büyüklük ve risk skoru hesaplamaları yapılmıştır. Böylece veri
+toplama ile ilk karar destek çıktıları arasında izlenebilir ve tekrarlanabilir bir
+iş akışı oluşturulmuştur.
+
+\section{Belirlenen Veri Alanları}
+
+Ara rapor aşamasında sistemde tutulacak temel veri alanları belirlenmiş ve uygulamada
+kullanılmaya başlanmıştır. Bu alanlar hem olay bazlı kayıt takibi hem de bölgesel
+özet analizler için yeterli bir temel oluşturmaktadır.
+
+\begin{table}[H]
+    \centering
+    \caption{Deprem kayıtları için belirlenen temel veri alanları}
+    \begin{tabular}{|l|p{8cm}|}
+        \hline
+        \textbf{Veri Alanı} & \textbf{Açıklama} \\
+        \hline
+        Kaynak ID & Verinin geldiği kurum bilgisi \\
+        \hline
+        Tarih & Deprem olayının gerçekleştiği tarih \\
+        \hline
+        Saat & Deprem olayının gerçekleştiği saat \\
+        \hline
+        Enlem & Depremin enlem değeri \\
+        \hline
+        Boylam & Depremin boylam değeri \\
+        \hline
+        Derinlik & Deprem odağının kilometre cinsinden derinliği \\
+        \hline
+        Büyüklük & Depremin sayısal büyüklük değeri \\
+        \hline
+        Yer Bilgisi & Deprem kaydındaki ham konum açıklaması \\
+        \hline
+        İl & Ayrıştırılmış il bilgisi \\
+        \hline
+        İlçe & Ayrıştırılmış ilçe bilgisi \\
+        \hline
+        Kayıt Kimliği & Veritabanındaki tekil kayıt kimliği \\
+        \hline
+    \end{tabular}
+    \label{tab:verialanlari}
+\end{table}
+
+Bu alanlar sayesinde hem tekil deprem olaylarının saklanması hem de şehir bazında
+özet sonuçlar üretilmesi mümkün hâle gelmiştir. İlerleyen aşamalarda veri kaynağı
+çeşitlendiğinde büyüklük türü, kayıt kimliği ve ek türetilmiş göstergeler de daha
+geniş biçimde kullanılabilecektir.
+
+\section{Risk Analizi Yaklaşımı}
+
+Projede deprem riski, tek bir değişkene bağlı olarak değil; birden fazla göstergenin
+birlikte değerlendirilmesiyle yorumlanmaktadır. Ara rapor aşamasında uygulanan ilk
+yaklaşımda şehir bazında toplam deprem sayısı, ortalama büyüklük ve maksimum büyüklük
+değerleri kullanılmıştır. Bu göstergeler kullanılarak örnek bir risk skoru üretilmiştir.
+
+Mevcut aşamada kullanılan örnek risk puanı aşağıdaki bileşenlere dayanmaktadır:
+
+\begin{itemize}
+    \item toplam deprem sayısı,
+    \item ortalama büyüklük,
+    \item maksimum büyüklük.
+\end{itemize}
+
+Uygulanan örnek hesaplama yaklaşımı şu şekildedir:
+
+\[
+Risk\ Skoru = (Toplam\ Deprem\ Sayısı \times 0.4) + (Ortalama\ Büyüklük \times 0.4) + (Maksimum\ Büyüklük \times 0.2)
+\]
+
+Bu formül nihai risk modeli değildir; ancak mevcut veri üzerinde bölgesel karşılaştırma
+yapılabilmesi için başlangıç niteliğinde bir karar destek göstergesi sunmaktadır.
+İlerleyen aşamalarda derinlik profili, eşik üstü deprem sayısı, son dönem aktivite
+yoğunluğu ve gerekirse kümelenme temelli göstergeler de modele dahil edilecektir.
+
+\chapter{Uygulama Durumu}
+
+Ara rapor tarihine kadar gerçekleştirilen çalışmalar aşağıda özetlenmiştir:
+
+\begin{itemize}
+    \item Proje konusu netleştirilmiş ve problem tanımı oluşturulmuştur.
+    \item AFAD ve Kandilli veri kaynakları incelenmiş, sistemde kullanılabilecek temel veri alanları belirlenmiştir.
+    \item PostgreSQL tabanlı veritabanı yapısı oluşturulmuş; \texttt{data\_sources}, \texttt{earthquakes} ve \texttt{risk\_analysis} tabloları tasarlanmış ve oluşturulmuştur.
+    \item AFAD internet sitesinden güncel deprem verilerini çekmek için Python tabanlı veri toplama modülü geliştirilmiştir.
+    \item Çekilen veriler üzerinde tarih-saat dönüştürme, sayısal alan temizleme ve yer bilgisinden il/ilçe ayrıştırma işlemleri gerçekleştirilmiştir.
+    \item Temizlenen veriler CSV formatına dönüştürülmüş ve PostgreSQL veritabanına aktarılmıştır.
+    \item Veritabanına aktarılan kayıtlar üzerinde şehir bazında deprem sayısı, ortalama büyüklük ve maksimum büyüklük gibi ilk analiz sorguları çalıştırılmıştır.
+    \item Bölgesel karşılaştırma amacıyla örnek bir risk puanlama yaklaşımı uygulanmış ve sonuçlar \texttt{risk\_analysis} tablosuna kaydedilmiştir.
+    \item Elde edilen risk skorları Python ve \texttt{matplotlib} kullanılarak grafiksel olarak görselleştirilmiştir.
+\end{itemize}
+
+Mevcut durumda sistemin temel veri işleme hattı çalışır durumdadır. AFAD kaynağından alınan veriler okunabilmekte, temizlenebilmekte, veritabanına aktarılabilmekte ve temel analiz sorguları ile işlenebilmektedir. Bu durum, projenin yalnızca kavramsal tasarım aşamasında kalmadığını, aynı zamanda çalışan bir prototip düzeyine ulaştığını göstermektedir.
+
+Bununla birlikte, proje henüz tamamlanmış değildir. Sonraki geliştirme adımları arasında aşağıdaki çalışmalar yer almaktadır:
+
+\begin{itemize}
+    \item Kandilli verilerinin sisteme dahil edilmesi,
+    \item farklı veri kaynaklarının ortak veri şemasında birleştirilmesi,
+    \item risk puanlama modelinin geliştirilmesi,
+    \item zaman serisi ve kümelenme analizlerinin eklenmesi,
+    \item web arayüzünün ilk prototipinin hazırlanması.
+\end{itemize}
+
+Gelinen noktada proje, başlangıç düzeyindeki planlama aşamasını aşmış; veri toplama, veri temizleme, veritabanına aktarma ve ilk analiz çıktılarının üretilmesi aşamasına ulaşmıştır.
+
+\chapter{Sonuçlar ve Tartışma}
+
+Ara rapor aşamasında sistemin nihai çıktıları henüz elde edilmemiştir. Bununla birlikte,
+uygulama sürecinde geliştirilen veri toplama, temizleme ve analiz bileşenleri sayesinde
+ilk somut sonuçlar üretilmiştir. AFAD kaynağından alınan deprem verileri PostgreSQL
+veritabanına aktarılmış ve şehir bazında temel özet istatistikler elde edilmiştir.
+
+Yapılan ilk analizlerde bazı şehirlerin veri kümesinde daha yoğun biçimde öne çıktığı
+gözlenmiştir. Özellikle Kütahya, Muğla, Balıkesir, Kahramanmaraş ve Bolu illeri,
+mevcut veri üzerinde hesaplanan örnek risk skorlarında üst sıralarda yer almıştır.
+Bu sonuçlar, kullanılan risk formülünün toplam deprem sayısı, ortalama büyüklük ve
+maksimum büyüklük bileşenlerini birlikte değerlendirmesine dayanmaktadır.
+Risk skorlarının ilk 10 il için dağılımı Şekil~\ref{fig:risk_scores}'de gösterilmiştir.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth,trim=2cm 1.5cm 2cm 1.5cm,clip]{risk_scores.png}
+    \caption{İllere Göre Risk Skorları (İlk 10)}
+    \label{fig:risk_scores}
+\end{figure}
+
+Elde edilen örnek sonuçlar, sistemin yalnızca deprem kayıtlarını depolayan bir yapı
+olmadığını; aynı zamanda verileri işleyerek bölgesel karşılaştırma yapabilen bir karar
+destek yaklaşımına dönüştürülebileceğini göstermektedir. Bu durum, projenin temel
+hedefiyle uyumludur. Ancak bu aşamada kullanılan risk skoru, nihai ve bilimsel olarak
+tamamlanmış bir deprem tehlike modeli olarak değerlendirilmemelidir. Mevcut yaklaşım,
+projenin erken aşamasında analiz mantığını test etmek ve farklı bölgeler arasında ilk
+karşılaştırmaları yapabilmek amacıyla oluşturulmuş başlangıç niteliğinde bir göstergedir.
+
+Uygulama sürecinde bazı sınırlılıklar da gözlenmiştir. Öncelikle veri kaynağındaki alan
+isimleri ve veri sunum biçimi zaman içerisinde değişebileceğinden, veri çekme ve temizleme
+modüllerinin dayanıklı biçimde geliştirilmesi gerekmektedir. Ayrıca şu ana kadar yalnızca
+AFAD verileri sisteme dahil edilmiştir; Kandilli verilerinin eklenmesi ile veri kapsamı
+ve karşılaştırma gücü artırılacaktır. Bunun yanında mevcut risk puanlama yaklaşımına
+derinlik profili, eşik üstü deprem sayısı, son dönem aktivite yoğunluğu ve kümelenme
+analizi gibi ek bileşenlerin dahil edilmesi planlanmaktadır.
+
+Sonuç olarak mevcut bulgular, projenin teknik açıdan uygulanabilir olduğunu ve resmi
+deprem verilerinin tek sistem altında analiz edilmesinin anlamlı çıktılar üretebildiğini
+göstermektedir. Bundan sonraki aşamada sistemin analitik kapasitesi geliştirilecek ve
+elde edilen sonuçların daha güçlü görselleştirmelerle kullanıcıya sunulması sağlanacaktır.
+
+\chapter{Sonuç}
+
+Bu ara raporda, Türkiye deprem verilerine dayalı riskli bölge ve olay deseni analizi
+yapacak bir karar destek sistemi için şimdiye kadar tamamlanan çalışmalar sunulmuştur.
+Gelinen noktada proje problemi tanımlanmış, veri kaynakları değerlendirilmiş, sistemde
+kullanılacak temel veri alanları belirlenmiş ve teknik altyapı oluşturulmuştur.
+
+Ara rapor aşamasında PostgreSQL tabanlı veritabanı yapısı kurulmuş, AFAD verilerinin
+Python kullanılarak alınması sağlanmış, veriler temizlenmiş ve veritabanına aktarılmıştır.
+Ayrıca şehir bazında temel analiz sorguları uygulanmış ve örnek bir risk puanlama
+yaklaşımı geliştirilmiştir. Elde edilen risk skorlarının grafiksel olarak gösterilmesiyle
+birlikte, projenin yalnızca kavramsal düzeyde kalmadığı, çalışan bir prototip düzeyine
+ulaştığı görülmüştür.
+
+Mevcut değerlendirmeler, projenin hem teknik hem de akademik açıdan uygulanabilir
+olduğunu göstermektedir. Türkiye'ye ait resmi deprem verilerinin tek sistem altında
+toplanması ve analiz edilmesi, kullanıcıların deprem hareketliliğini daha bilinçli
+yorumlamasına katkı sağlayabilecek bir yazılım ortaya çıkarma potansiyeline sahiptir.
+
+Sonraki aşamada Kandilli verilerinin sisteme dahil edilmesi, veri kaynaklarının ortak
+bir yapıda birleştirilmesi, risk puanlama modelinin geliştirilmesi, zaman serisi ve
+kümelenme analizlerinin eklenmesi ve web tabanlı kullanıcı arayüzünün oluşturulması
+hedeflenmektedir. Böylece proje, mevcut çalışan analiz altyapısından daha kapsamlı ve
+kullanıcıya doğrudan karar desteği sunan bir sisteme dönüştürülecektir.
+
+%-------------------- KAYNAKÇA --------------------
+\begin{thebibliography}{99}
+
+\bibitem{afad_harita}
+Afet ve Acil Durum Yönetimi Başkanlığı,
+\textit{Türkiye Deprem Tehlike Haritası},
+Erişim Tarihi: 14.04.2026.
+
+\bibitem{afad_son}
+Afet ve Acil Durum Yönetimi Başkanlığı,
+\textit{Son Depremler},
+Erişim Tarihi: 14.04.2026.
+
+\bibitem{kandilli_son}
+Boğaziçi Üniversitesi Kandilli Rasathanesi ve Deprem Araştırma Enstitüsü,
+\textit{Son Depremler},
+Erişim Tarihi: 14.04.2026.
+
+\bibitem{kandilli_yillik}
+Boğaziçi Üniversitesi Kandilli Rasathanesi ve Deprem Araştırma Enstitüsü,
+\textit{Yıllık Deprem Harita, Grafik ve Tabloları},
+Erişim Tarihi: 14.04.2026.
+
+\end{thebibliography}
+
+\end{document}

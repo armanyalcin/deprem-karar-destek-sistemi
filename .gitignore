@@ -1,0 +1,15 @@
+# sanal ortam
+.venv/
+__pycache__/
+*.pyc
+
+# gizli bilgiler / ortam değişkenleri
+.env
+
+# üretilmiş veri / çıktı
+*.csv
+*.png
+afad_raw_page.html
+pipeline_log.txt
+afad_update_log.txt
+afad_latest_snapshot.csv

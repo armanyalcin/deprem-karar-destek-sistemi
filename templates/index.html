@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye Deprem Karar Destek Sistemi</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #eef2f7;
+            color: #111827;
+        }
+
+        .page {
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a, #1d4ed8);
+            color: white;
+            padding: 34px 24px 80px;
+        }
+
+        .hero-inner {
+            max-width: 1220px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 34px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            margin: 10px 0 0;
+            color: #dbeafe;
+            max-width: 850px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1220px;
+            margin: -48px auto 0;
+            padding: 0 20px 50px;
+        }
+
+        .top-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 2fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+        }
+
+        .metric-card {
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::after {
+            content: "";
+            position: absolute;
+            right: -45px;
+            top: -45px;
+            width: 140px;
+            height: 140px;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.10);
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 38px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .update-value {
+            font-size: 24px;
+            line-height: 1.3;
+            color: #0f172a;
+         }
+
+        .update-card::after {
+            background: rgba(22, 163, 74, 0.10);
+        }
+
+        .metric-sub {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        h2 {
+            margin: 0 0 16px;
+            font-size: 21px;
+            color: #0f172a;
+        }
+
+        .filter-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .filter-title small {
+            color: #64748b;
+        }
+
+        form.filter-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+
+
+        .update-actions {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.update-button {
+    background: #16a34a;
+    width: fit-content;
+}
+
+.update-button:hover {
+    background: #15803d;
+}
+
+.status-alert {
+    padding: 11px 13px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.status-alert.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.status-alert.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+        select, button {
+            padding: 12px 14px;
+            font-size: 15px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            padding-left: 22px;
+            padding-right: 22px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .selected-panel {
+            margin-bottom: 20px;
+            border: 1px solid #bfdbfe;
+            background: linear-gradient(135deg, #ffffff, #eff6ff);
+        }
+
+        .selected-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .selected-title {
+            margin: 0;
+            font-size: 26px;
+            color: #0f172a;
+        }
+
+        .selected-desc {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-orange {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .badge-red {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge-gray {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .cluster-explain {
+            margin-top: -4px;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .stat-title {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .stat-note {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        .rank {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .full-width {
+            margin-bottom: 20px;
+        }
+
+        #map {
+            height: 440px;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .section-title-row h2 {
+            margin: 0;
+        }
+
+        .muted {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .empty-note {
+            padding: 16px;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px dashed #cbd5e1;
+        }
+
+        @media (max-width: 1050px) {
+            .top-grid,
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .hero {
+                padding: 28px 18px 70px;
+            }
+
+            .hero h1 {
+                font-size: 26px;
+            }
+
+            .container {
+                padding: 0 14px 40px;
+            }
+
+            form.filter-form {
+                grid-template-columns: 1fr;
+            }
+
+            .selected-header {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-value {
+                font-size: 32px;
+            }
+
+            th, td {
+                font-size: 13px;
+                padding: 10px 8px;
+            }
+
+            #map {
+                height: 360px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="page">
+    <div class="hero">
+        <div class="hero-inner">
+            <h1>Türkiye Deprem Karar Destek Sistemi</h1>
+            <p>
+                AFAD API verileriyle güncellenen deprem kayıtları, şehir bazlı risk analizi,
+                K-Means clustering sonuçları ve harita destekli karar ekranı.
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-grid">
+    <div class="card metric-card">
+        <div class="metric-label">Veritabanındaki Toplam Deprem Kaydı</div>
+        <div class="metric-value">{{ total_earthquakes }}</div>
+        <div class="metric-sub">Otomatik pipeline ile güncellenir</div>
+    </div>
+
+    <div class="card metric-card update-card">
+        <div class="metric-label">Son Güncelleme Zamanı</div>
+        <div class="metric-value update-value">
+            {% if last_update_time %}
+                {{ last_update_time }}
+            {% else %}
+                -
+            {% endif %}
+        </div>
+        <div class="metric-sub">Veritabanındaki en güncel AFAD kaydı</div>
+    </div>
+
+    <div class="card filter-card">
+                <div class="filter-title">
+                    <div>
+                        <h2>Şehir Analizi</h2>
+                        <small>Bir şehir seçerek risk, istatistik ve cluster sonucunu görüntüleyebilirsin.</small>
+                    </div>
+                    {% if selected_city %}
+                        <span class="badge badge-blue">{{ selected_city }}</span>
+                    {% else %}
+                        <span class="badge badge-gray">Tüm Türkiye</span>
+                    {% endif %}
+                </div>
+
+                <form method="get" action="/" class="filter-form">
+                    <select name="city">
+                        <option value="">Tüm İller</option>
+                        {% for city in city_list %}
+                            <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>
+                                {{ city }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Analiz Et</button>
+                </form>
+                <div class="update-actions">
+    <form method="post" action="/update-data">
+        <input type="hidden" name="city" value="{{ selected_city }}">
+        <button type="submit" class="update-button">Verileri Güncelle</button>
+    </form>
+
+    {% if update_status == "success" %}
+        <div class="status-alert success">
+            Veriler başarıyla güncellendi. Sayfa güncel kayıtlarla yenilendi.
+        </div>
+    {% elif update_status == "error" %}
+        <div class="status-alert error">
+            Veri güncelleme sırasında hata oluştu. Pipeline log dosyasını kontrol et.
+        </div>
+    {% endif %}
+</div>
+
+            </div>
+        </div>
+
+        {% if selected_city %}
+        <div class="card selected-panel">
+            <div class="selected-header">
+                <div>
+                    <h2 class="selected-title">{{ selected_city }} Analiz Paneli</h2>
+                    <p class="selected-desc">
+                        Seçilen ilin deprem yoğunluğu, büyüklük istatistikleri, risk skoru ve model kümesi.
+                    </p>
+                </div>
+
+                {% if selected_city_cluster_label %}
+                    {% if selected_city_cluster_label == "Yüksek Aktivite Grubu" %}
+                        <span class="badge badge-red">{{ selected_city_cluster_label }}</span>
+                    {% elif selected_city_cluster_label == "Orta Aktivite Grubu" %}
+                        <span class="badge badge-orange">{{ selected_city_cluster_label }}</span>
+                    {% else %}
+                        <span class="badge badge-blue">{{ selected_city_cluster_label }}</span>
+                    {% endif %}
+                {% else %}
+                    <span class="badge badge-gray">Cluster bilgisi yok</span>
+                {% endif %}
+            </div>
+
+            {% if selected_city_cluster_label %}
+            <div class="cluster-explain">
+                Bu grup, sadece ekranda görünen son 10 deprem kaydına göre değil;
+                toplam deprem sayısı, ortalama büyüklük, maksimum büyüklük, ortalama derinlik,
+                son 7/30 gün aktivitesi ve belirli büyüklük eşiklerini aşan deprem sayıları birlikte
+                değerlendirilerek oluşturulmuştur.
+            </div>
+            {% endif %}
+
+            {% if selected_city_stats %}
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-title">Toplam Deprem</div>
+                    <div class="stat-value">{{ selected_city_stats[0] }}</div>
+                    <div class="stat-note">Veritabanındaki kayıt</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-title">Ortalama Büyüklük</div>
+                    <div class="stat-value">{{ selected_city_stats[1] }}</div>
+                    <div class="stat-note">ML ortalaması</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-title">Maksimum Büyüklük</div>
+                    <div class="stat-value">{{ selected_city_stats[2] }}</div>
+                    <div class="stat-note">En yüksek kayıt</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-title">Ortalama Derinlik</div>
+                    <div class="stat-value">{{ selected_city_stats[3] }}</div>
+                    <div class="stat-note">Kilometre</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-title">Risk Skoru</div>
+                    <div class="stat-value">
+                        {% if selected_city_risk %}
+                            {{ selected_city_risk[1] }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                    <div class="stat-note">Kural tabanlı karar destek skoru</div>
+                </div>
+            </div>
+            {% else %}
+                <div class="empty-note">Bu şehir için istatistik bulunamadı.</div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="tables-grid">
+            <div class="card">
+                <div class="section-title-row">
+                    <h2>En Çok Deprem Görülen İller</h2>
+                    <span class="muted">İlk 10</span>
+                </div>
+
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>İl</th>
+                        <th>Kayıt Sayısı</th>
+                    </tr>
+                    {% for city, count in top_cities %}
+                    <tr>
+                        <td><span class="rank">{{ loop.index }}</span></td>
+                        <td>{{ city }}</td>
+                        <td><strong>{{ count }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="section-title-row">
+                    <h2>Risk Skoru En Yüksek İller</h2>
+                    <span class="muted">İlk 10</span>
+                </div>
+
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>İl</th>
+                        <th>Risk Skoru</th>
+                    </tr>
+                    {% for city, score in top_risks %}
+                    <tr>
+                        <td><span class="rank">{{ loop.index }}</span></td>
+                        <td>{{ city }}</td>
+                        <td><strong>{{ score }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <div class="section-title-row">
+                <h2>Deprem Konum Haritası</h2>
+                {% if selected_city %}
+                    <span class="muted">{{ selected_city }} için son kayıtlar</span>
+                {% else %}
+                    <span class="muted">Son 10 deprem kaydı</span>
+                {% endif %}
+            </div>
+            <div id="map"></div>
+        </div>
+
+        <div class="card full-width">
+            <div class="section-title-row">
+                <h2>
+                    {% if selected_city %}
+                        {{ selected_city }} İçin Son 10 Deprem
+                    {% else %}
+                        Son 10 Deprem
+                    {% endif %}
+                </h2>
+                <span class="muted">AFAD API kaynaklı kayıtlar</span>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                    <th>İl</th>
+                    <th>İlçe</th>
+                    <th>Büyüklük</th>
+                    <th>Derinlik</th>
+                </tr>
+                {% for event_date, event_time, city, district, magnitude, depth_km, latitude, longitude in latest_earthquakes %}
+                <tr>
+                    <td>{{ event_date }}</td>
+                    <td>{{ event_time }}</td>
+                    <td>{{ city }}</td>
+                    <td>{{ district if district else "-" }}</td>
+                    <td><strong>{{ magnitude }}</strong></td>
+                    <td>{{ depth_km }} km</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const earthquakeData = {{ map_data | tojson }};
+
+    const map = L.map('map').setView([39.0, 35.0], 6);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const bounds = [];
+
+    earthquakeData.forEach(eq => {
+        if (eq.lat !== null && eq.lon !== null) {
+            const marker = L.marker([eq.lat, eq.lon]).addTo(map);
+
+            marker.bindPopup(`
+                <strong>${eq.city}</strong><br>
+                İlçe: ${eq.district}<br>
+                Tarih: ${eq.date} ${eq.time}<br>
+                Büyüklük: ${eq.magnitude}<br>
+                Derinlik: ${eq.depth} km
+            `);
+
+            bounds.push([eq.lat, eq.lon]);
+        }
+    });
+
+    if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [35, 35] });
+    }
+</script>
+</body>
+</html>
