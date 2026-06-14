@@ -165,6 +165,26 @@ def home():
             "lon": float(longitude) if longitude is not None else None
         })
 
+    # Isı haritası verisi (koordinatı olan tüm depremler; seçili şehir varsa filtreli)
+    if selected_city:
+        cur.execute("""
+            SELECT latitude, longitude, magnitude
+            FROM earthquakes
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+              AND city = %s;
+        """, (selected_city,))
+    else:
+        cur.execute("""
+            SELECT latitude, longitude, magnitude
+            FROM earthquakes
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL;
+        """)
+
+    heat_data = [
+        [float(lat), float(lon), float(magnitude) if magnitude is not None else 1.0]
+        for lat, lon, magnitude in cur.fetchall()
+    ]
+
     cur.close()
     conn.close()
 
@@ -202,6 +222,7 @@ def home():
         selected_city_risk=selected_city_risk,
         selected_city_stats=selected_city_stats,
         map_data=map_data,
+        heat_data=heat_data,
         selected_city_cluster=selected_city_cluster,
         selected_city_cluster_label=selected_city_cluster_label
     )

@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 
     <style>
         * {
@@ -793,6 +794,7 @@
 
 <script>
     const earthquakeData = {{ map_data | tojson }};
+    const heatData = {{ heat_data | tojson }};
 
     const map = L.map('map').setView([39.0, 35.0], 6);
 
@@ -803,9 +805,12 @@
 
     const bounds = [];
 
+    // Marker katmani (silinmedi, toggle edilebilir gruba alindi)
+    const markersLayer = L.layerGroup();
+
     earthquakeData.forEach(eq => {
         if (eq.lat !== null && eq.lon !== null) {
-            const marker = L.marker([eq.lat, eq.lon]).addTo(map);
+            const marker = L.marker([eq.lat, eq.lon]);
 
             marker.bindPopup(`
                 <strong>${eq.city}</strong><br>
@@ -815,9 +820,37 @@
                 Derinlik: ${eq.depth} km
             `);
 
+            marker.addTo(markersLayer);
             bounds.push([eq.lat, eq.lon]);
         }
     });
+
+    markersLayer.addTo(map);
+
+    // Isi haritasi katmani (ek katman; veri varsa olusturulur)
+    const overlays = { "Noktalar": markersLayer };
+
+    if (heatData.length > 0) {
+        // Her noktayi sabit yogunluk (1) olarak al; boylece yogun bolgelerde
+        // noktalar birikip "sicak" olur, az depremli yerler mavi/seffaf kalir.
+        const heatPoints = heatData.map(p => [p[0], p[1], 1]);
+        const heatLayer = L.heatLayer(heatPoints, {
+            radius: 25,
+            blur: 15,
+            max: 8.0,          // ~8 ust uste binen deprem = tam kirmizi
+            minOpacity: 0.25,
+            gradient: {
+                0.2: 'blue',
+                0.4: 'cyan',
+                0.6: 'yellow',
+                0.8: 'orange',
+                1.0: 'red'
+            }
+        }).addTo(map);
+        overlays["Isı Haritası"] = heatLayer;
+    }
+
+    L.control.layers(null, overlays, { collapsed: false }).addTo(map);
 
     if (bounds.length > 0) {
         map.fitBounds(bounds, { padding: [35, 35] });
