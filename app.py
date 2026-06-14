@@ -276,5 +276,17 @@ def update_data():
         print("Guncelleme sirasinda hata:", e)
         return redirect(url_for("home", city=selected_city, update_status="error"))
 
+@app.route("/hazirlik")
+def hazirlik():
+    # Deprem hazirligi / acil durum cantasi sayfasi. Ana dashboard'dan bagimsiz,
+    # statik icerik (hazirlik_icerik.json). Dosya yoksa sayfa yine de acilir.
+    icerik = None
+    try:
+        with open(os.path.join(BASE_DIR, "hazirlik_icerik.json"), encoding="utf-8") as f:
+            icerik = json.load(f)
+    except (FileNotFoundError, ValueError):
+        icerik = None
+    return render_template("hazirlik.html", icerik=icerik)
+
 if __name__ == "__main__":
     app.run(debug=True)

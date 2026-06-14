@@ -1,0 +1,48 @@
+{
+  "baslik": "Deprem Hazırlığı: Acil Durum Çantası",
+  "giris": "Bir afet sonrası ilk 72 saat kritik öneme sahiptir; yardım ekiplerinin ulaşması gecikebilir. Bu süreçte temel ihtiyaçları karşılayabilecek, her an kolay ulaşılabilen bir acil durum çantası hayat kurtarabilir. Aşağıdaki kategoriler AFAD'ın önerilerine dayanmaktadır.",
+  "kaynak": "İçerik AFAD (Afet ve Acil Durum Yönetimi Başkanlığı) acil durum çantası önerilerine dayalıdır.",
+  "kategoriler": [
+    {
+      "ad": "Su",
+      "ikon": "su",
+      "ozet": "Kişi başı günde en az 1 litre, 3 günlük",
+      "onem": "Su, hayatta kalmanın en temel ihtiyacıdır. AFAD, kişi başı günlük en az 1 litre olacak şekilde 3 gün yetecek miktarda su depolanmasını önerir. Su, kapalı ve ışık almayan şişelerde, serin bir yerde saklanmalıdır. Afet sonrası şebeke suyu kesilebilir veya kirlenebilir; bu yüzden temiz içme suyu stoğu önceliklidir."
+    },
+    {
+      "ad": "Gıda",
+      "ikon": "gida",
+      "ozet": "Bozulmayan, pişirme gerektirmeyen yiyecekler",
+      "onem": "Afet sonrası yiyeceğe ulaşmak zorlaşabilir. Bozulmadan uzun süre dayanabilen, tok tutan ve pişirme gerektirmeyen gıdalar tercih edilmelidir: konserve yiyecekler, enerji barları, kuru meyve, bisküvi, tahin-pekmez gibi yüksek kalorili besinler idealdir. Son kullanma tarihleri düzenli kontrol edilmelidir."
+    },
+    {
+      "ad": "İlk Yardım",
+      "ikon": "ilkyardim",
+      "ozet": "Temel ilk yardım seti ve ilaçlar",
+      "onem": "Küçük yaralanmalara ilk müdahale için temel bir ilk yardım seti şarttır: steril gazlı bez, yara bandı, antiseptik solüsyon, elastik bandaj, makas, pens, sargı bezi, steril eldiven ve termometre. Ayrıca düzenli kullanılan kişisel ilaçların bir miktarı da çantada bulundurulmalıdır."
+    },
+    {
+      "ad": "Işık ve İletişim",
+      "ikon": "isik",
+      "ozet": "El feneri, pilli radyo, yedek pil, düdük",
+      "onem": "Elektrik günlerce kesilebilir. El feneri ve yedek piller karanlıkta görüş sağlar. Pille çalışan veya güneş enerjili radyo, resmi duyuruları takip etmek için önemlidir. Düdük, enkaz altında kalındığında ses çıkararak yardım ekiplerine yer bildirmenin en etkili yoludur — bağırmaktan çok daha az enerji harcatır."
+    },
+    {
+      "ad": "Önemli Belgeler ve Nakit",
+      "ikon": "evrak",
+      "ozet": "Kimlik fotokopileri, nakit para",
+      "onem": "Afet sonrası kart sistemleri ve ATM'ler çalışmayabilir; küçük banknotlarla bir miktar nakit para hayat kurtarıcı olabilir. Kimlik, tapu, sigorta ve sağlık belgelerinin fotokopileri ile acil durum iletişim bilgileri listesi su geçirmez bir poşette saklanmalıdır. Dijital yedek de alınması önerilir."
+    },
+    {
+      "ad": "Hijyen ve Korunma",
+      "ikon": "hijyen",
+      "ozet": "Hijyen ürünleri, battaniye, çakı",
+      "onem": "Akan su olmayabileceği için sabun, ıslak mendil, diş macunu gibi temel hijyen ürünleri, taşınabilir tuvalet ve çöp torbaları gereklidir. Battaniye ve mevsime uygun giysi, soğuğa karşı korunma sağlar. Çok amaçlı bir çakı da pek çok durumda işe yarar."
+    }
+  ],
+  "ek_notlar": [
+    "Çanta her zaman kolay ulaşılabilecek bir yerde tutulmalıdır.",
+    "Bebek, yaşlı, engelli bireyler ve evcil hayvanlar için özel ihtiyaçlar da eklenmelidir.",
+    "İçindeki gıda, su ve ilaçların son kullanma tarihleri düzenli kontrol edilmelidir."
+  ]
+}

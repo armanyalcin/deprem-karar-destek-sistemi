@@ -49,6 +49,27 @@
             line-height: 1.6;
         }
 
+        .hero-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            padding: 10px 18px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 999px;
+            transition: background 150ms ease, transform 150ms ease;
+        }
+
+        .hero-link:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
         .container {
             max-width: 1220px;
             margin: -48px auto 0;
@@ -520,6 +541,7 @@
                 AFAD API verileriyle güncellenen deprem kayıtları, şehir bazlı risk analizi,
                 K-Means clustering sonuçları ve harita destekli karar ekranı.
             </p>
+            <a class="hero-link" href="{{ url_for('hazirlik') }}">🎒 Deprem Hazırlığı</a>
         </div>
     </div>
 
