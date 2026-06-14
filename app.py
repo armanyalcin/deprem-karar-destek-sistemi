@@ -3,6 +3,7 @@ import pandas as pd
 import subprocess
 import sys
 import os
+import json
 
 from config import get_connection
 
@@ -209,6 +210,14 @@ def home():
             selected_city_cluster = None
             selected_city_cluster_label = None
 
+    # Fay hatlari katmani verisi (sematik, literatur kaynakli; dosya yoksa katman cizilmez)
+    fault_data = None
+    try:
+        with open(os.path.join(BASE_DIR, "fay_hatlari.geojson"), encoding="utf-8") as f:
+            fault_data = json.load(f)
+    except (FileNotFoundError, ValueError):
+        fault_data = None
+
     return render_template(
         "index.html",
         total_earthquakes=total_earthquakes,
@@ -223,6 +232,7 @@ def home():
         selected_city_stats=selected_city_stats,
         map_data=map_data,
         heat_data=heat_data,
+        fault_data=fault_data,
         selected_city_cluster=selected_city_cluster,
         selected_city_cluster_label=selected_city_cluster_label
     )

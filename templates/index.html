@@ -795,6 +795,7 @@
 <script>
     const earthquakeData = {{ map_data | tojson }};
     const heatData = {{ heat_data | tojson }};
+    const faultData = {{ fault_data | tojson }};
 
     const map = L.map('map').setView([39.0, 35.0], 6);
 
@@ -848,6 +849,18 @@
             }
         }).addTo(map);
         overlays["Isı Haritası"] = heatLayer;
+    }
+
+    // Fay hatlari katmani (sematik temsil; varsayilan KAPALI baslar -> .addTo(map) yok)
+    if (faultData && faultData.features && faultData.features.length > 0) {
+        const faultLayer = L.geoJSON(faultData, {
+            style: feature => ({
+                color: feature.properties.renk,  // her fay kendi rengiyle
+                weight: 3,
+                opacity: 0.9
+            })
+        });
+        overlays["Fay Hatları"] = faultLayer;
     }
 
     L.control.layers(null, overlays, { collapsed: false }).addTo(map);

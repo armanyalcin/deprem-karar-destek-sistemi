@@ -1,0 +1,95 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "aciklama": "Turkiye ana fay sistemlerinin literatur kaynakli basitlestirilmis sematik guzergahi. MTA resmi diri fay verisi DEGILDIR; ana fay sistemlerinin yaklasik konumunu gosterir.",
+    "kaynak": "Literaturdeki bilinen fay guzergahlarina dayali temsili cizim (Sengor vd., Barka, Emre vd. calismalarindan basitlestirilmistir)"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "ad": "Kuzey Anadolu Fayi (KAF)",
+        "tip": "saga yonlu dogrultu atimli",
+        "renk": "#E24B4A"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [26.4, 40.35],
+          [27.1, 40.55],
+          [27.9, 40.68],
+          [28.7, 40.72],
+          [29.5, 40.74],
+          [30.3, 40.73],
+          [31.0, 40.78],
+          [31.6, 40.82],
+          [32.5, 40.65],
+          [33.6, 40.62],
+          [34.8, 40.6],
+          [35.9, 40.65],
+          [36.8, 40.55],
+          [37.6, 40.0],
+          [38.5, 39.85],
+          [39.5, 39.8],
+          [40.3, 39.55],
+          [41.0, 39.35]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ad": "Dogu Anadolu Fayi (DAF)",
+        "tip": "sola yonlu dogrultu atimli",
+        "renk": "#D85A30"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [41.0, 39.35],
+          [40.5, 39.0],
+          [40.0, 38.6],
+          [39.5, 38.35],
+          [39.0, 38.1],
+          [38.4, 37.85],
+          [37.8, 37.6],
+          [37.3, 37.35],
+          [36.9, 37.05],
+          [36.5, 36.7],
+          [36.2, 36.35],
+          [36.1, 36.0]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ad": "Bati Anadolu Graben Sistemi",
+        "tip": "normal fay / acilma rejimi",
+        "renk": "#378ADD"
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [26.8, 38.4],
+            [27.6, 38.4],
+            [28.4, 38.35],
+            [29.2, 38.3]
+          ],
+          [
+            [26.9, 37.85],
+            [27.7, 37.9],
+            [28.6, 37.92],
+            [29.4, 37.88]
+          ],
+          [
+            [27.2, 38.9],
+            [28.0, 38.95],
+            [28.9, 38.9]
+          ]
+        ]
+      }
+    }
+  ]
+}
