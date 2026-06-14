@@ -1,6 +1,12 @@
+import warnings
+
 import pandas as pd
 
 from config import get_connection, normalize_city
+
+# pd.read_sql psycopg2 baglantisiyla calisir ama SQLAlchemy oneren kozmetik bir
+# UserWarning uretir; proje genelinde psycopg2 kullanildigi icin bastiriyoruz.
+warnings.filterwarnings("ignore", message="pandas only supports SQLAlchemy")
 
 VALID_CITIES = {
     "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya",
