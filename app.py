@@ -10,6 +10,17 @@ from config import get_connection
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Model dogrulama (backtest) sonuclari - backtest_validation.py ciktisindan alinan
+# statik degerler. Dogrulama bir kez yapilan harici, salt-okunur analizdir;
+# pipeline'a baglanmaz. Yeni backtest yapilirsa bu degerler guncellenir.
+VALIDATION_METRICS = {
+    "spearman_rho": 0.66,
+    "spearman_p": "< 0.001",
+    "hist_eq_mean": 0.52,      # gecmiste M>=6 yasamis illerin ort. risk skoru
+    "hist_no_eq_mean": 0.33,   # yasamamis illerin ort. risk skoru
+    "mann_whitney_p": "< 0.001",
+}
+
 def get_cluster_label_map():
     """
     K-Means cluster numaraları sabit anlam taşımaz.
@@ -233,6 +244,7 @@ def home():
         map_data=map_data,
         heat_data=heat_data,
         fault_data=fault_data,
+        validation=VALIDATION_METRICS,
         selected_city_cluster=selected_city_cluster,
         selected_city_cluster_label=selected_city_cluster_label
     )

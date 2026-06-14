@@ -289,6 +289,13 @@
             padding: 16px;
         }
 
+        .validation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 14px;
+        }
+
         .stat-title {
             font-size: 13px;
             color: #64748b;
@@ -741,6 +748,46 @@
                     </tr>
                     {% endfor %}
                 </table>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <div class="section-title-row">
+                <h2>Model Doğrulama</h2>
+                <span class="muted">Bağımsız backtest</span>
+            </div>
+
+            <div class="cluster-explain">
+                Model, AFAD tehlike haritasıyla ρ = {{ validation.spearman_rho }}
+                (p {{ validation.spearman_p }}) sıra korelasyonu gösterir; tarihsel büyük deprem
+                (M≥6) yaşamış iller, yaşamamış illere göre anlamlı şekilde daha yüksek risk
+                skoruna sahiptir (Mann-Whitney p {{ validation.mann_whitney_p }}). Bu, risk
+                skorunun bağımsız referanslarla tutarlı olduğunu gösterir.
+            </div>
+
+            <div class="validation-grid">
+                <div class="stat-box">
+                    <div class="stat-title">AFAD Korelasyonu</div>
+                    <div class="stat-value">ρ = {{ validation.spearman_rho }}</div>
+                    <div class="stat-note">Spearman sıra korelasyonu (p {{ validation.spearman_p }})</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-title">M≥6 Yaşamış İller</div>
+                    <div class="stat-value">{{ validation.hist_eq_mean }}</div>
+                    <div class="stat-note">Ortalama risk skoru</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-title">M≥6 Yaşamamış İller</div>
+                    <div class="stat-value">{{ validation.hist_no_eq_mean }}</div>
+                    <div class="stat-note">Ortalama risk skoru (Mann-Whitney p {{ validation.mann_whitney_p }})</div>
+                </div>
+            </div>
+
+            <div class="empty-note" style="margin-top: 12px;">
+                Bu metrikler, backtest_validation.py ile yapılan bağımsız ve salt-okunur bir
+                doğrulama analizinin sonuçlarıdır.
             </div>
         </div>
 
