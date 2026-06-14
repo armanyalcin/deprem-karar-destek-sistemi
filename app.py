@@ -276,6 +276,59 @@ def update_data():
         print("Guncelleme sirasinda hata:", e)
         return redirect(url_for("home", city=selected_city, update_status="error"))
 
+@app.route("/karsilastir")
+def karsilastir():
+    # Iki ili yan yana karsilastirma sayfasi. Ana dashboard'dan bagimsiz.
+    il1 = request.args.get("il1", "").strip()
+    il2 = request.args.get("il2", "").strip()
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Dropdown'lar: yalnizca risk verisi olan iller
+    cur.execute("SELECT city FROM risk_analysis WHERE risk_score IS NOT NULL ORDER BY city;")
+    city_list = [r[0] for r in cur.fetchall()]
+
+    # Sabit/whitelist sutun listesi (f-string guvenli; il degeri parametreli)
+    cols = ["risk_score", "activity_score", "bvalue_score", "population_score", "fault_score",
+            "b_value", "fault_zone", "total_earthquakes", "max_magnitude"]
+
+    def fetch(il):
+        if not il:
+            return None
+        cur.execute(
+            f"SELECT {', '.join(cols)} FROM risk_analysis WHERE city = %s LIMIT 1;",
+            (il,)
+        )
+        row = cur.fetchone()
+        return dict(zip(cols, row)) if row else None
+
+    d1 = fetch(il1)
+    d2 = fetch(il2)
+
+    cur.close()
+    conn.close()
+
+    # Hangi il daha yuksek risk skoruna sahip (None'lara karsi guard'li)
+    karsilastirma_notu = None
+    if (d1 and d2 and il1 != il2
+            and d1["risk_score"] is not None and d2["risk_score"] is not None):
+        r1, r2 = float(d1["risk_score"]), float(d2["risk_score"])
+        if r1 > r2:
+            karsilastirma_notu = f"{il1}, {il2}'e göre daha yüksek risk skoruna sahip."
+        elif r2 > r1:
+            karsilastirma_notu = f"{il2}, {il1}'e göre daha yüksek risk skoruna sahip."
+        else:
+            karsilastirma_notu = f"{il1} ve {il2} aynı risk skoruna sahip."
+
+    return render_template(
+        "karsilastir.html",
+        city_list=city_list,
+        il1=il1, il2=il2,
+        d1=d1, d2=d2,
+        karsilastirma_notu=karsilastirma_notu
+    )
+
 @app.route("/hazirlik")
 def hazirlik():
     # Deprem hazirligi / acil durum cantasi sayfasi. Ana dashboard'dan bagimsiz,
