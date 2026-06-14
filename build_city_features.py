@@ -1,6 +1,6 @@
 import pandas as pd
 
-from config import get_connection
+from config import get_connection, normalize_city
 
 VALID_CITIES = {
     "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya",
@@ -50,7 +50,11 @@ def fetch_city_features():
     conn.close()
 
     df["city"] = df["city"].astype(str).str.strip()
-    df = df[df["city"].isin(VALID_CITIES)].copy()
+
+    # Gecerli illeri normalize anahtarla esle: "Hakkâri" ile DB'deki "Hakkari" gibi
+    # sapkali/sapkasiz, buyuk/kucuk harf ve Turkce karakter farklarina dayanikli.
+    valid_keys = {normalize_city(c) for c in VALID_CITIES}
+    df = df[df["city"].map(normalize_city).isin(valid_keys)].copy()
 
     return df
 

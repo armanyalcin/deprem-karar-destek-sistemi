@@ -1,0 +1,82 @@
+city,fault_zone,fault_score
+Adana,Dogu Anadolu Fay Zonu (yakin),0.5
+Adıyaman,Dogu Anadolu Fay Zonu (yakin),0.5
+Afyonkarahisar,Bati Anadolu Graben (yakin),0.5
+Ağrı,Diger/Dogu,0.0
+Aksaray,Merkezden Diri Fay,1.0
+Amasya,Kuzey Anadolu Fay Zonu (yakin),0.5
+Ankara,Diger/Ic Anadolu,0.0
+Antalya,Bati Anadolu Graben (yakin),0.5
+Ardahan,Diger/Dogu,0.0
+Artvin,Diger/Karadeniz,0.0
+Aydın,Merkezden Diri Fay,1.0
+Balıkesir,Merkezden Diri Fay,1.0
+Bartın,Diger/Karadeniz,0.0
+Batman,Diger/Guneydogu,0.0
+Bayburt,Diger/Dogu,0.0
+Bilecik,Kuzey Anadolu Fay Zonu (yakin),0.5
+Bingöl,Merkezden Diri Fay,1.0
+Bitlis,Diger/Dogu,0.0
+Bolu,Merkezden Diri Fay,1.0
+Burdur,Merkezden Diri Fay,1.0
+Bursa,Merkezden Diri Fay,1.0
+Çanakkale,Kuzey Anadolu Fay Zonu (yakin),0.5
+Çankırı,Kuzey Anadolu Fay Zonu (yakin),0.5
+Çorum,Kuzey Anadolu Fay Zonu (yakin),0.5
+Denizli,Merkezden Diri Fay,1.0
+Diyarbakır,Diger/Guneydogu,0.0
+Düzce,Kuzey Anadolu Fay Zonu (yakin),0.5
+Edirne,Diger/Trakya,0.0
+Elazığ,Dogu Anadolu Fay Zonu (yakin),0.5
+Erzincan,Merkezden Diri Fay,1.0
+Erzurum,Merkezden Diri Fay,1.0
+Eskişehir,Merkezden Diri Fay,1.0
+Gaziantep,Dogu Anadolu Fay Zonu (yakin),0.5
+Giresun,Diger/Karadeniz,0.0
+Gümüşhane,Diger/Dogu,0.0
+Hakkari,Merkezden Diri Fay,1.0
+Hatay,Merkezden Diri Fay,1.0
+Iğdır,Diger/Dogu,0.0
+Isparta,Bati Anadolu Graben (yakin),0.5
+İstanbul,Kuzey Anadolu Fay Zonu (yakin),0.5
+İzmir,Merkezden Diri Fay,1.0
+Kahramanmaraş,Merkezden Diri Fay,1.0
+Karabük,Diger/Karadeniz,0.0
+Karaman,Diger/Ic Anadolu,0.0
+Kars,Diger/Dogu,0.0
+Kastamonu,Diger/Karadeniz,0.0
+Kayseri,Merkezden Diri Fay,1.0
+Kilis,Dogu Anadolu Fay Zonu (yakin),0.5
+Kırıkkale,Diger/Ic Anadolu,0.0
+Kırklareli,Diger/Trakya,0.0
+Kırşehir,Diger/Ic Anadolu,0.0
+Kocaeli,Merkezden Diri Fay,1.0
+Konya,Merkezden Diri Fay,1.0
+Kütahya,Merkezden Diri Fay,1.0
+Malatya,Dogu Anadolu Fay Zonu (yakin),0.5
+Manisa,Merkezden Diri Fay,1.0
+Mardin,Diger/Guneydogu,0.0
+Mersin,Diger/Ic Anadolu,0.0
+Muğla,Merkezden Diri Fay,1.0
+Muş,Dogu Anadolu Fay Zonu (yakin),0.5
+Nevşehir,Diger/Ic Anadolu,0.0
+Niğde,Diger/Ic Anadolu,0.0
+Ordu,Diger/Karadeniz,0.0
+Osmaniye,Merkezden Diri Fay,1.0
+Rize,Diger/Karadeniz,0.0
+Sakarya,Merkezden Diri Fay,1.0
+Samsun,Kuzey Anadolu Fay Zonu (yakin),0.5
+Siirt,Diger/Guneydogu,0.0
+Sinop,Diger/Karadeniz,0.0
+Sivas,Kuzey Anadolu Fay Zonu (yakin),0.5
+Şanlıurfa,Diger/Guneydogu,0.0
+Şırnak,Diger/Guneydogu,0.0
+Tekirdağ,Kuzey Anadolu Fay Zonu (yakin),0.5
+Tokat,Merkezden Diri Fay,1.0
+Trabzon,Diger/Karadeniz,0.0
+Tunceli,Dogu Anadolu Fay Zonu (yakin),0.5
+Uşak,Bati Anadolu Graben (yakin),0.5
+Van,Kuzey Anadolu Fay Zonu (yakin),0.5
+Yalova,Kuzey Anadolu Fay Zonu (yakin),0.5
+Yozgat,Diger/Ic Anadolu,0.0
+Zonguldak,Diger/Karadeniz,0.0

@@ -49,6 +49,7 @@ def main():
     try:
         run_step("update_afad_to_postgres.py", "AFAD API veri guncelleme")
         run_step("build_city_features.py", "Sehir bazli ozellik uretme")
+        run_step("compute_risk_scores.py", "Risk skoru hesaplama")
         run_step("train_clustering_model.py", "Clustering modeli calistirma")
 
         write_log("Pipeline basariyla tamamlandi")
