@@ -110,7 +110,8 @@ def home():
     selected_city_risk = None
     if selected_city:
         cur.execute("""
-            SELECT city, risk_score
+            SELECT city, risk_score,
+                   activity_score, bvalue_score, population_score, fault_score
             FROM risk_analysis
             WHERE city = %s
             LIMIT 1;

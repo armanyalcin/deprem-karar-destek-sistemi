@@ -307,6 +307,70 @@
             line-height: 1.4;
         }
 
+        .component-bars {
+            margin-top: 18px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+        }
+
+        .component-bars-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .component-bars-note {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .component-row {
+            display: grid;
+            grid-template-columns: 130px 1fr 52px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .component-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .component-label {
+            font-size: 13px;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .component-track {
+            position: relative;
+            height: 14px;
+            background: #eef2f7;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .component-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #60a5fa, #1d4ed8);
+        }
+
+        .component-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1d4ed8;
+            text-align: right;
+        }
+
         .tables-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -587,6 +651,48 @@
             </div>
             {% else %}
                 <div class="empty-note">Bu şehir için istatistik bulunamadı.</div>
+            {% endif %}
+
+            {% if selected_city_risk and selected_city_risk[2] is not none %}
+            <div class="component-bars">
+                <div class="component-bars-title">Risk Skoru Bileşenleri</div>
+                <div class="component-bars-note">
+                    Risk skoru dört bağımsız bileşenin ağırlıklı toplamıdır (her biri 0-1 aralığında,
+                    başlangıç ağırlığı 1/4). Aşağıdaki çubuklar skorun nereden geldiğini gösterir.
+                </div>
+
+                <div class="component-row">
+                    <span class="component-label">Aktivite</span>
+                    <span class="component-track">
+                        <span class="component-fill" style="width: {{ (selected_city_risk[2]|float * 100)|round(1) }}%;"></span>
+                    </span>
+                    <span class="component-value">{{ "%.2f"|format(selected_city_risk[2]|float) }}</span>
+                </div>
+
+                <div class="component-row">
+                    <span class="component-label">b-değeri</span>
+                    <span class="component-track">
+                        <span class="component-fill" style="width: {{ (selected_city_risk[3]|float * 100)|round(1) }}%;"></span>
+                    </span>
+                    <span class="component-value">{{ "%.2f"|format(selected_city_risk[3]|float) }}</span>
+                </div>
+
+                <div class="component-row">
+                    <span class="component-label">Nüfus</span>
+                    <span class="component-track">
+                        <span class="component-fill" style="width: {{ (selected_city_risk[4]|float * 100)|round(1) }}%;"></span>
+                    </span>
+                    <span class="component-value">{{ "%.2f"|format(selected_city_risk[4]|float) }}</span>
+                </div>
+
+                <div class="component-row">
+                    <span class="component-label">Fay Yakınlığı</span>
+                    <span class="component-track">
+                        <span class="component-fill" style="width: {{ (selected_city_risk[5]|float * 100)|round(1) }}%;"></span>
+                    </span>
+                    <span class="component-value">{{ "%.2f"|format(selected_city_risk[5]|float) }}</span>
+                </div>
+            </div>
             {% endif %}
         </div>
         {% endif %}
